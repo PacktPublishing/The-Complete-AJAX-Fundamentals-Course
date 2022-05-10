@@ -1,0 +1,101 @@
+<html>
+<style>
+    body {
+        background-color: #ffcc00;
+        font-family: sans-serif;
+    }
+    h1 {
+        text-align: center;
+        padding-top:140px;
+        font-size: 60px;
+        margin: -15px;
+    }
+    p {
+        text-align: center;        
+        color: #907400;
+    }
+    p#btn {
+        cursor: pointer;
+    }
+    img {
+        margin: auto;
+        display: block;
+    }
+</style>
+<body>
+    <h1 id="iptext">This will be replaced with your public IP address</h1>
+    <br>
+    <p>( This is your IP address ... probably )</p>
+    <p id="btn">Show Image</p>
+    <img width="30%">
+    <script>
+
+        // ************************ FETCHING THE IP ADDRESS
+        // define variables
+        let url = "http://worldtimeapi.org/api/timezone/Africa/Harare";
+
+        // use the Headers Interface
+        let h = new Headers(); 
+        h.append("Accept", "application/json");
+
+        // use the Request Interface
+        let req = new Request(url, {
+            method: "GET",
+            headers: h
+        });
+
+        // define our AJAX fetch request
+        fetch(req)
+            .then( (res) => {
+                return res.json();
+            })
+            .then( (JSObject) => {
+                document.getElementById('iptext').innerHTML = JSObject.client_ip;
+            })
+            .catch( (err) => {
+                console.log('Oops, there was a network error');
+            });
+
+            // ************************ FETCHING THE IMAGE
+            // define variables
+            let paraButton = document.getElementById('btn');
+            let imageURL = "./ajax.png";
+            let imageElement = document.getElementsByTagName('img')[0];
+
+            // add an event listener
+            paraButton.addEventListener('click', fetchImage);
+
+            // create our fetchImage function
+            function fetchImage() {
+            //    using the Headers Interface
+            let h = new Headers();
+            h.append("Accept", "image/png");
+
+            // using the Request Interface
+            let req = new Request(imageURL, {
+                method: "GET",
+                headers: h
+            }); 
+
+            // perform our fetch call
+            fetch(req)
+                .then( (res) => {
+                    return res.blob();
+                })
+                .then( (imageObject) => {
+                    let pictureURL = URL.createObjectURL(imageObject);
+                    imageElement.src = pictureURL;
+                    console.log('SUCCESS');
+                })
+                .catch( (err) => {
+                    console.log('NOW this will catch all errors ', err);
+                })
+
+            }
+
+
+
+
+    </script>
+</body>
+</html>

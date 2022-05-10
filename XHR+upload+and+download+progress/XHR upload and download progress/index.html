@@ -1,0 +1,48 @@
+<html>
+    <body>
+        <button>Click me</button>
+        <script>
+            let button = document.getElementsByTagName('button')[0];
+            button.addEventListener('click', () => {
+                // set up our AJAX engine 
+                // Step 1: set up our AJAX object
+                let xhr = new XMLHttpRequest();             
+
+                // Step 2: configure our XHR object
+                let url = "./message.txt";
+                let method = "GET";
+                xhr.open(method, url);
+
+                xhr.responseType = "text"; 
+                // text, json, blob, document
+
+                // Step 3: listen for events
+
+                // ***example 1: download progress
+                xhr.onprogress = (e) => {
+                    console.log(`Downloaded ${e.loaded} of ${e.total} bytes`);
+                }
+
+                xhr.onerror = () => {
+                    console.log('this was triggered by the onerror event and is therefore a network error')
+                }
+
+
+                xhr.onload = () => {
+                    if(xhr.status === 200) {
+                        document.write("You have been successful, and here is your secret message: ", xhr.responseText);
+                    } else {
+                        if(xhr.status === 404) {
+                            document.write('Oops, that file does not exist');
+                        }
+                    }
+                }
+
+                // Step 4: send the XHR object to the server
+                xhr.send();
+
+            })
+        </script>
+    </body>
+
+</html>
